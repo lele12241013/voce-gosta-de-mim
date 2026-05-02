@@ -141,10 +141,6 @@
       font-weight: 500;
     }
 
-    .card.fullscreen {
-      display: none;
-    }
-
     .celebration {
       display: none;
       flex-direction: column;
@@ -179,22 +175,8 @@
 
     @media (max-width: 640px) {
       .card {
-        min-height: 500px;
-        padding: 26px 18px;
-      }
-
-      .play-area {
-        height: 255px;
-      }
-
-      #yesBtn {
-        left: 30%;
-        top: 68%;
-      }
-
-      #noBtn {
-        left: 72%;
-        top: 68%;
+        min-height: 420px;
+        padding: 34px 28px;
       }
     }
   </style>
@@ -223,8 +205,6 @@
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
 
-    const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-    let noScale = 1;
     let movingLock = false;
 
     function randomPosition() {
@@ -236,13 +216,11 @@
       const maxX = areaRect.width - noRect.width - pad;
       const maxY = areaRect.height - noRect.height - pad;
 
-      // tenta ate 10 vezes achar uma posicao que nao sobreponha o botao Sim
       let nextX, nextY, attempts = 0;
       do {
         nextX = Math.max(pad, Math.random() * maxX);
         nextY = Math.max(pad, Math.random() * maxY);
 
-        // posicao absoluta do Nao em relacao ao playArea
         const noAbsLeft = areaRect.left + nextX;
         const noAbsTop  = areaRect.top  + nextY;
 
@@ -258,7 +236,7 @@
 
       noBtn.style.left = `${nextX}px`;
       noBtn.style.top = `${nextY}px`;
-      noBtn.style.transform = `scale(${noScale})`;
+      noBtn.style.transform = "none";
     }
 
     function fleeFromCursor(clientX, clientY) {
@@ -272,88 +250,30 @@
       if (distance < 110) {
         movingLock = true;
         randomPosition();
-
-        requestAnimationFrame(() => {
-          movingLock = false;
-        });
+        requestAnimationFrame(() => { movingLock = false; });
       }
     }
 
     yesBtn.addEventListener("click", () => {
-      // esconde o card
-      document.querySelector(".card").classList.add("fullscreen");
-
-      // cria overlay que cobre tela toda
-      const overlay = document.createElement("div");
-      overlay.style.cssText = [
-        "position:fixed",
-        "top:0","left:0","right:0","bottom:0",
-        "width:100%",
-        "height:" + window.innerHeight + "px",
-        "background:url('bg.jpg') center center/cover no-repeat",
-        "display:flex",
-        "flex-direction:column",
-        "align-items:center",
-        "justify-content:center",
-        "gap:24px",
-        "padding:24px 16px",
-        "z-index:9999",
-        "box-sizing:border-box"
-      ].join(";");
-
-      const img = document.createElement("img");
-      img.src = "flores.png";
-      img.alt = "Flores para voce";
-      img.style.cssText = "width:min(96vw,680px);border-radius:18px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.35));animation:bloom 700ms ease-out";
-
-      const msg = document.createElement("p");
-      msg.textContent = "Eu sabia! Te adoro! ";
-      msg.style.cssText = "font-family:'Permanent Marker',cursive;font-size:clamp(2.2rem,7vw,3.4rem);color:#f5a8c8;text-align:center;text-shadow:0 3px 14px rgba(0,0,0,.55);margin:0";
-
-      overlay.appendChild(img);
-      overlay.appendChild(msg);
-      document.body.appendChild(overlay);
-
-      // ajusta altura se usuario girar tela
-      window.addEventListener("resize", () => {
-        overlay.style.height = window.innerHeight + "px";
-      });
+      document.querySelector(".title").style.display = "none";
+      document.querySelector(".hint").style.display = "none";
+      playArea.style.display = "none";
+      message.style.display = "none";
+      document.getElementById("celebration").classList.add("show");
     });
 
-    if (!isMobile) {
-      document.addEventListener("mousemove", (event) => {
-        fleeFromCursor(event.clientX, event.clientY);
-      });
+    document.addEventListener("mousemove", (event) => {
+      fleeFromCursor(event.clientX, event.clientY);
+    });
 
-      noBtn.addEventListener("mouseenter", () => {
-        randomPosition();
-      });
+    noBtn.addEventListener("mouseenter", () => {
+      randomPosition();
+    });
 
-      noBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        randomPosition();
-      });
-    } else {
-      noBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-
-        noScale = Math.max(0, noScale - 0.1);
-        randomPosition();
-
-        if (noScale <= 0) {
-          noBtn.style.display = "none";
-          message.textContent = "Sem chance! So resta o Sim 😄";
-          message.style.color = "#a13a2f";
-        } else if (noScale < 0.3) {
-          message.textContent = "Quase sumindo...";
-          message.style.color = "#a13a2f";
-        } else {
-          message.textContent = "Esse botao esta ficando timido...";
-          message.style.color = "#a13a2f";
-        }
-      });
-    }
-
+    noBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      randomPosition();
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voce gosta de mim?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --card: rgba(15, 15, 15, 0.72);
+      --text: #f0e8d8;
+      --yes: #2e9a43;
+      --yes-hover: #257d36;
+      --no: #d94a38;
+      --shadow: 0 18px 38px rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Fredoka", sans-serif;
+      color: var(--text);
+      background: url('bg.jpg') center center / cover no-repeat fixed;
+      overflow: hidden;
+    }
+
+
+    .card {
+      width: min(92vw, 700px);
+      min-height: 420px;
+      border-radius: 30px;
+      padding: 34px 28px;
+      backdrop-filter: blur(5px);
+      background: var(--card);
+      border: 2px solid rgba(255, 255, 255, 0.65);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      animation: rise 650ms ease-out;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(20px) scale(0.97);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .title {
+      margin: 0 0 22px;
+      font-family: "Permanent Marker", cursive;
+      font-size: clamp(2rem, 4.3vw, 3.2rem);
+      text-align: center;
+      letter-spacing: 1px;
+      line-height: 1.15;
+      color: #f5d0e0;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+
+    .hint {
+      text-align: center;
+      margin: 0;
+      font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+      opacity: 0.8;
+    }
+
+    .play-area {
+      margin-top: 30px;
+      position: relative;
+      height: 190px;
+      border-radius: 22px;
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .btn {
+      position: absolute;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 30px;
+      font-weight: 700;
+      font-family: "Fredoka", sans-serif;
+      font-size: clamp(1rem, 2.8vw, 1.25rem);
+      cursor: pointer;
+      box-shadow: 0 9px 22px rgba(0, 0, 0, 0.16);
+      transition: transform 180ms ease, background 180ms ease, opacity 180ms ease;
+      will-change: transform, left, top;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn {
+      left: 30%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--yes);
+      color: #fff;
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    #yesBtn:hover {
+      background: var(--yes-hover);
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    #noBtn {
+      left: 70%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--no);
+      color: #fff;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        box-shadow: 0 9px 22px rgba(0, 0, 0, 0.16);
+      }
+      50% {
+        box-shadow: 0 10px 27px rgba(46, 154, 67, 0.4);
+      }
+    }
+
+    .message {
+      margin-top: 18px;
+      min-height: 32px;
+      text-align: center;
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      font-weight: 500;
+    }
+
+    .celebration {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      animation: rise 600ms ease-out;
+    }
+
+    .celebration.show {
+      display: flex;
+    }
+
+    .celebration img {
+      width: min(92vw, 560px);
+      border-radius: 18px;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35));
+      animation: bloom 700ms ease-out;
+    }
+
+    @keyframes bloom {
+      from { transform: scale(0.7) rotate(-4deg); opacity: 0; }
+      to   { transform: scale(1)   rotate(0deg);  opacity: 1; }
+    }
+
+    .celebration-msg {
+      font-family: "Permanent Marker", cursive;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: #f5a8c8;
+      text-align: center;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.55);
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        min-height: 500px;
+        padding: 26px 18px;
+      }
+
+      .play-area {
+        height: 255px;
+      }
+
+      #yesBtn {
+        left: 30%;
+        top: 68%;
+      }
+
+      #noBtn {
+        left: 72%;
+        top: 68%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 class="title">Voce gosta de mim?</h1>
+    <p class="hint">Escolha com carinho...</p>
+
+    <section class="play-area" id="playArea" aria-label="Area de botoes">
+      <button class="btn" id="yesBtn" type="button">Sim</button>
+      <button class="btn" id="noBtn" type="button">Nao</button>
+    </section>
+
+    <p class="message" id="message"></p>
+
+    <div class="celebration" id="celebration">
+      <img src="flores.png" alt="Flores para voce" />
+      <p class="celebration-msg">Eu sabia! Te adoro!</p>
+    </div>
+  </main>
+
+  <script>
+    const playArea = document.getElementById("playArea");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+
+    const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    let noScale = 1;
+    let movingLock = false;
+
+    function randomPosition() {
+      const areaRect = playArea.getBoundingClientRect();
+      const noRect = noBtn.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
+      const pad = 8;
+
+      const maxX = areaRect.width - noRect.width - pad;
+      const maxY = areaRect.height - noRect.height - pad;
+
+      // tenta ate 10 vezes achar uma posicao que nao sobreponha o botao Sim
+      let nextX, nextY, attempts = 0;
+      do {
+        nextX = Math.max(pad, Math.random() * maxX);
+        nextY = Math.max(pad, Math.random() * maxY);
+
+        // posicao absoluta do Nao em relacao ao playArea
+        const noAbsLeft = areaRect.left + nextX;
+        const noAbsTop  = areaRect.top  + nextY;
+
+        const overlap =
+          noAbsLeft < yesRect.right  + 10 &&
+          noAbsLeft + noRect.width  > yesRect.left  - 10 &&
+          noAbsTop  < yesRect.bottom + 10 &&
+          noAbsTop  + noRect.height > yesRect.top   - 10;
+
+        if (!overlap) break;
+        attempts++;
+      } while (attempts < 10);
+
+      noBtn.style.left = `${nextX}px`;
+      noBtn.style.top = `${nextY}px`;
+      noBtn.style.transform = `scale(${noScale})`;
+    }
+
+    function fleeFromCursor(clientX, clientY) {
+      if (movingLock) return;
+
+      const noRect = noBtn.getBoundingClientRect();
+      const distX = clientX - (noRect.left + noRect.width / 2);
+      const distY = clientY - (noRect.top + noRect.height / 2);
+      const distance = Math.hypot(distX, distY);
+
+      if (distance < 110) {
+        movingLock = true;
+        randomPosition();
+
+        requestAnimationFrame(() => {
+          movingLock = false;
+        });
+      }
+    }
+
+    yesBtn.addEventListener("click", () => {
+      document.querySelector(".title").style.display = "none";
+      document.querySelector(".hint").style.display = "none";
+      playArea.style.display = "none";
+      message.style.display = "none";
+      document.getElementById("celebration").classList.add("show");
+    });
+
+    if (!isMobile) {
+      document.addEventListener("mousemove", (event) => {
+        fleeFromCursor(event.clientX, event.clientY);
+      });
+
+      noBtn.addEventListener("mouseenter", () => {
+        randomPosition();
+      });
+
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        randomPosition();
+      });
+    } else {
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        noScale = Math.max(0, noScale - 0.1);
+        randomPosition();
+
+        if (noScale <= 0) {
+          noBtn.style.display = "none";
+          message.textContent = "Sem chance! So resta o Sim 😄";
+          message.style.color = "#a13a2f";
+        } else if (noScale < 0.3) {
+          message.textContent = "Quase sumindo...";
+          message.style.color = "#a13a2f";
+        } else {
+          message.textContent = "Esse botao esta ficando timido...";
+          message.style.color = "#a13a2f";
+        }
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      randomPosition();
+    });
+  </script>
+</body>
+</html>

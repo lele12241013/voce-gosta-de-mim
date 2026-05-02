@@ -205,6 +205,8 @@
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
 
+    const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    let noScale = 1;
     let movingLock = false;
 
     function randomPosition() {
@@ -236,7 +238,7 @@
 
       noBtn.style.left = `${nextX}px`;
       noBtn.style.top = `${nextY}px`;
-      noBtn.style.transform = "none";
+      noBtn.style.transform = `scale(${noScale})`;
     }
 
     function fleeFromCursor(clientX, clientY) {
@@ -284,7 +286,7 @@
       img.style.filter = "drop-shadow(0 12px 30px rgba(0,0,0,.35))";
 
       const msg = document.createElement("p");
-      msg.textContent = "Eu sabia! Te adoro! 🌸";
+      msg.textContent = "Eu sabia! Te adoro! ";
       msg.style.fontFamily = "'Permanent Marker', cursive";
       msg.style.fontSize = "clamp(2rem, 7vw, 3.4rem)";
       msg.style.color = "#c0396b";
@@ -297,18 +299,36 @@
       document.body.appendChild(overlay);
     });
 
-    document.addEventListener("mousemove", (event) => {
-      fleeFromCursor(event.clientX, event.clientY);
-    });
+    if (!isMobile) {
+      document.addEventListener("mousemove", (event) => {
+        fleeFromCursor(event.clientX, event.clientY);
+      });
 
-    noBtn.addEventListener("mouseenter", () => {
-      randomPosition();
-    });
+      noBtn.addEventListener("mouseenter", () => {
+        randomPosition();
+      });
 
-    noBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      randomPosition();
-    });
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        randomPosition();
+      });
+    } else {
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        noScale = Math.max(0, noScale - 0.1);
+        randomPosition();
+
+        if (noScale <= 0) {
+          noBtn.style.display = "none";
+          message.textContent = "Sem chance! So resta o Sim";
+          message.style.color = "#a13a2f";
+        } else {
+          message.textContent = "Esse botao esta ficando timido...";
+          message.style.color = "#a13a2f";
+        }
+      });
+    }
   </script>
 </body>
 </html>

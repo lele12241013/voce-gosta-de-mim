@@ -28,7 +28,7 @@
       place-items: center;
       font-family: "Fredoka", sans-serif;
       color: var(--text);
-      background: url('bg.jpg') center center / cover no-repeat;
+      background: url('bg.jpg') center center / cover no-repeat fixed;
       overflow: hidden;
     }
 
@@ -205,8 +205,6 @@
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
 
-    const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-    let noScale = 1;
     let movingLock = false;
 
     function randomPosition() {
@@ -238,7 +236,7 @@
 
       noBtn.style.left = `${nextX}px`;
       noBtn.style.top = `${nextY}px`;
-      noBtn.style.transform = `scale(${noScale})`;
+      noBtn.style.transform = "none";
     }
 
     function fleeFromCursor(clientX, clientY) {
@@ -257,78 +255,25 @@
     }
 
     yesBtn.addEventListener("click", () => {
-      // esconde o card inteiro
-      document.querySelector(".card").style.display = "none";
-
-      // muda fundo
-      document.body.style.background = "url('bg2.jpg') center center / cover no-repeat";
-      document.body.style.backgroundSize = "cover";
-
-      // overlay fullscreen colado no body
-      const overlay = document.createElement("div");
-      const s = overlay.style;
-      s.position = "fixed";
-      s.top = "0"; s.left = "0"; s.right = "0"; s.bottom = "0";
-      s.display = "flex";
-      s.flexDirection = "column";
-      s.alignItems = "center";
-      s.justifyContent = "center";
-      s.gap = "24px";
-      s.padding = "24px 16px";
-      s.boxSizing = "border-box";
-      s.zIndex = "9999";
-
-      const img = document.createElement("img");
-      img.src = "flores.png";
-      img.alt = "Flores para voce";
-      img.style.width = "min(92vw, 680px)";
-      img.style.borderRadius = "18px";
-      img.style.filter = "drop-shadow(0 12px 30px rgba(0,0,0,.35))";
-
-      const msg = document.createElement("p");
-      msg.textContent = "Eu sabia! Te adoro! ";
-      msg.style.fontFamily = "'Permanent Marker', cursive";
-      msg.style.fontSize = "clamp(2rem, 7vw, 3.4rem)";
-      msg.style.color = "#c0396b";
-      msg.style.textAlign = "center";
-      msg.style.textShadow = "0 2px 10px rgba(0,0,0,.25)";
-      msg.style.margin = "0";
-
-      overlay.appendChild(img);
-      overlay.appendChild(msg);
-      document.body.appendChild(overlay);
+      document.querySelector(".title").style.display = "none";
+      document.querySelector(".hint").style.display = "none";
+      playArea.style.display = "none";
+      message.style.display = "none";
+      document.getElementById("celebration").classList.add("show");
     });
 
-    if (!isMobile) {
-      document.addEventListener("mousemove", (event) => {
-        fleeFromCursor(event.clientX, event.clientY);
-      });
+    document.addEventListener("mousemove", (event) => {
+      fleeFromCursor(event.clientX, event.clientY);
+    });
 
-      noBtn.addEventListener("mouseenter", () => {
-        randomPosition();
-      });
+    noBtn.addEventListener("mouseenter", () => {
+      randomPosition();
+    });
 
-      noBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        randomPosition();
-      });
-    } else {
-      noBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-
-        noScale = Math.max(0, noScale - 0.1);
-        randomPosition();
-
-        if (noScale <= 0) {
-          noBtn.style.display = "none";
-          message.textContent = "Sem chance! So resta o Sim";
-          message.style.color = "#a13a2f";
-        } else {
-          message.textContent = "Esse botao esta ficando timido...";
-          message.style.color = "#a13a2f";
-        }
-      });
-    }
+    noBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      randomPosition();
+    });
   </script>
 </body>
 </html>

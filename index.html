@@ -32,6 +32,10 @@
       overflow: hidden;
     }
 
+    body.celebration-bg {
+      background: url('bg2.jpg') center center / cover no-repeat fixed;
+    }
+
 
     .card {
       width: min(92vw, 700px);
@@ -288,6 +292,7 @@
     }
 
     yesBtn.addEventListener("click", () => {
+      document.body.classList.add("celebration-bg");
       document.querySelector(".title").style.display = "none";
       document.querySelector(".hint").style.display = "none";
       playArea.style.display = "none";
@@ -331,7 +336,9 @@
     }
 
     window.addEventListener("resize", () => {
-      randomPosition();
+      if (!isMobile) {
+        randomPosition();
+      }
     });
   </script>
 </body>

@@ -141,11 +141,23 @@
       font-weight: 500;
     }
 
+    .card.fullscreen {
+      width: 100vw;
+      min-height: 100vh;
+      border-radius: 0;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
     .celebration {
       display: none;
       flex-direction: column;
       align-items: center;
-      gap: 18px;
+      gap: 24px;
       animation: rise 600ms ease-out;
     }
 
@@ -154,7 +166,7 @@
     }
 
     .celebration img {
-      width: min(92vw, 560px);
+      width: min(96vw, 680px);
       border-radius: 18px;
       filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35));
       animation: bloom 700ms ease-out;
@@ -167,7 +179,7 @@
 
     .celebration-msg {
       font-family: "Permanent Marker", cursive;
-      font-size: clamp(2rem, 6vw, 3rem);
+      font-size: clamp(2.2rem, 7vw, 3.4rem);
       color: #f5a8c8;
       text-align: center;
       text-shadow: 0 3px 14px rgba(0,0,0,0.55);
@@ -280,6 +292,7 @@
       document.querySelector(".hint").style.display = "none";
       playArea.style.display = "none";
       message.style.display = "none";
+      document.querySelector(".card").classList.add("fullscreen");
       document.getElementById("celebration").classList.add("show");
     });
 

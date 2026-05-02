@@ -141,6 +141,18 @@
       font-weight: 500;
     }
 
+    .card.fullscreen {
+      width: 100vw;
+      min-height: 100vh;
+      border-radius: 0;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
     .celebration {
       display: none;
       flex-direction: column;
@@ -175,8 +187,22 @@
 
     @media (max-width: 640px) {
       .card {
-        min-height: 420px;
-        padding: 34px 28px;
+        min-height: 500px;
+        padding: 26px 18px;
+      }
+
+      .play-area {
+        height: 255px;
+      }
+
+      #yesBtn {
+        left: 30%;
+        top: 68%;
+      }
+
+      #noBtn {
+        left: 72%;
+        top: 68%;
       }
     }
   </style>
@@ -205,6 +231,8 @@
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
 
+    const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    let noScale = 1;
     let movingLock = false;
 
     function randomPosition() {
@@ -216,11 +244,13 @@
       const maxX = areaRect.width - noRect.width - pad;
       const maxY = areaRect.height - noRect.height - pad;
 
+      // tenta ate 10 vezes achar uma posicao que nao sobreponha o botao Sim
       let nextX, nextY, attempts = 0;
       do {
         nextX = Math.max(pad, Math.random() * maxX);
         nextY = Math.max(pad, Math.random() * maxY);
 
+        // posicao absoluta do Nao em relacao ao playArea
         const noAbsLeft = areaRect.left + nextX;
         const noAbsTop  = areaRect.top  + nextY;
 
@@ -236,7 +266,7 @@
 
       noBtn.style.left = `${nextX}px`;
       noBtn.style.top = `${nextY}px`;
-      noBtn.style.transform = "none";
+      noBtn.style.transform = `scale(${noScale})`;
     }
 
     function fleeFromCursor(clientX, clientY) {
@@ -250,7 +280,10 @@
       if (distance < 110) {
         movingLock = true;
         randomPosition();
-        requestAnimationFrame(() => { movingLock = false; });
+
+        requestAnimationFrame(() => {
+          movingLock = false;
+        });
       }
     }
 
@@ -259,19 +292,45 @@
       document.querySelector(".hint").style.display = "none";
       playArea.style.display = "none";
       message.style.display = "none";
+      document.querySelector(".card").classList.add("fullscreen");
       document.getElementById("celebration").classList.add("show");
     });
 
-    document.addEventListener("mousemove", (event) => {
-      fleeFromCursor(event.clientX, event.clientY);
-    });
+    if (!isMobile) {
+      document.addEventListener("mousemove", (event) => {
+        fleeFromCursor(event.clientX, event.clientY);
+      });
 
-    noBtn.addEventListener("mouseenter", () => {
-      randomPosition();
-    });
+      noBtn.addEventListener("mouseenter", () => {
+        randomPosition();
+      });
 
-    noBtn.addEventListener("click", (event) => {
-      event.preventDefault();
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        randomPosition();
+      });
+    } else {
+      noBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        noScale = Math.max(0, noScale - 0.1);
+        randomPosition();
+
+        if (noScale <= 0) {
+          noBtn.style.display = "none";
+          message.textContent = "Sem chance! So resta o Sim 😄";
+          message.style.color = "#a13a2f";
+        } else if (noScale < 0.3) {
+          message.textContent = "Quase sumindo...";
+          message.style.color = "#a13a2f";
+        } else {
+          message.textContent = "Esse botao esta ficando timido...";
+          message.style.color = "#a13a2f";
+        }
+      });
+    }
+
+    window.addEventListener("resize", () => {
       randomPosition();
     });
   </script>
